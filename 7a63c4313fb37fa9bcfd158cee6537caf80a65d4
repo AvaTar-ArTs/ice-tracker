@@ -1,0 +1,51 @@
+v7/backend/src/modules/data-ingestion/index.js
+  b6ade8b61d8c123e 1-22,25-45,47-51,53,56-69,78-82,89-151
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.2",
+  "base_commit_sha": "7a63c4313fb37fa9bcfd158cee6537caf80a65d4",
+  "prompts": {
+    "6be3ab278b69002a": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "f9a3e920-75cb-47cf-b5a5-6d5f21a3c13c",
+        "model": "unknown"
+      },
+      "human_author": "GPTJunkie <info@gptjunkie.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 474,
+      "overriden_lines": 0
+    },
+    "73c25990a67c8e65": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "6d281f48-178a-4b3a-8757-8b9c14ba126e",
+        "model": "default"
+      },
+      "human_author": "GPTJunkie <info@gptjunkie.com>",
+      "messages": [],
+      "total_additions": 6760,
+      "total_deletions": 151,
+      "accepted_lines": 6727,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/244715688bb58aa9793816f9d50dbd4ed52586179f32de36bf252ca8ce7faf06"
+    },
+    "b6ade8b61d8c123e": {
+      "agent_id": {
+        "tool": "gemini",
+        "id": "cc454ab0-2fb2-4dff-a124-51f019a499b4",
+        "model": "gemini-2.5-flash"
+      },
+      "human_author": "GPTJunkie <info@gptjunkie.com>",
+      "messages": [],
+      "total_additions": 996,
+      "total_deletions": 174,
+      "accepted_lines": 816,
+      "overriden_lines": 9,
+      "messages_url": "https://usegitai.com/cas/8fce6a8129fcb0c56de6a88ddb6969a5d5fe6d6ae5af96565060b2a234238ac4"
+    }
+  }
+}
