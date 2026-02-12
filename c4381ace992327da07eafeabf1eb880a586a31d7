@@ -1,0 +1,21 @@
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.2",
+  "base_commit_sha": "c4381ace992327da07eafeabf1eb880a586a31d7",
+  "prompts": {
+    "6be3ab278b69002a": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "f9a3e920-75cb-47cf-b5a5-6d5f21a3c13c",
+        "model": "unknown"
+      },
+      "human_author": "GPTJunkie <info@gptjunkie.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 5,
+      "overriden_lines": 0
+    }
+  }
+}
