@@ -1,0 +1,25 @@
+CHANGELOG.md
+  6be3ab278b69002a 13
+README.md
+  6be3ab278b69002a 56-64
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.2",
+  "base_commit_sha": "40a9aeeac90ee920435fed7306630feb24ca0a17",
+  "prompts": {
+    "6be3ab278b69002a": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "f9a3e920-75cb-47cf-b5a5-6d5f21a3c13c",
+        "model": "unknown"
+      },
+      "human_author": "GPTJunkie <info@gptjunkie.com>",
+      "messages": [],
+      "total_additions": 10,
+      "total_deletions": 1,
+      "accepted_lines": 15,
+      "overriden_lines": 0
+    }
+  }
+}
