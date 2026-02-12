@@ -43,6 +43,16 @@ npm run build
 npm start
 ```
 
+## Pushing to GitHub (AvaTar-ArTs/ice-tracker)
+
+Git credentials are loaded from **`~/.env.d/github.env`** (not stored in the repo). To push:
+
+```bash
+./scripts/push-avatararts.sh
+```
+
+Or manually: `source ~/.env.d/github.env` then push using `GITHUB_TOKEN_AVATARARTS` in the remote URL. The script uses the AvaTar-ArTs token for `https://github.com/AvaTar-ArTs/ice-tracker.git`.
+
 ## SEO, GEO, XEO/DEO & trending optimizations
 
 The app is optimized for **top 1–5%** visibility and **trending/rising (+200%)** search intent:

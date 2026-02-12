@@ -8,7 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
-- No unreleased changes at this time.
+- README: Pushing section (push script, ~/.env.d).
+- CI: GitHub Action for build on push to master/main.
+- Git AI: project setup and usage note in docs.
 
 ---
 
