@@ -1,0 +1,262 @@
+docs/INTERNET_RESEARCH_ICE_TRACKING_TOOLS_AND_SEARCH.md
+  73c25990a67c8e65 1-142
+v4/app/components/StructuredNewsLd.tsx
+  73c25990a67c8e65 1-38
+v3/app/lib/url-state.ts
+  73c25990a67c8e65 1-31
+v3/app/lib/community-reports.ts
+  73c25990a67c8e65 1-36
+v3/README.md
+  73c25990a67c8e65 1-50
+docs/plans/2026-02-12-ice-tracker-v7-implementation-plan.md
+  b6ade8b61d8c123e 1-222
+v7/backend/package.json
+  b6ade8b61d8c123e 1-23
+v4/app/api/ice-news/route.ts
+  73c25990a67c8e65 1-170
+v4/app/lib/community-reports.ts
+  73c25990a67c8e65 1-36
+v4/CHANGELOG.md
+  73c25990a67c8e65 1-7
+v3/app/sitemap.ts
+  73c25990a67c8e65 1-13
+docs/DOCS_INDEX.md
+  73c25990a67c8e65 1-35
+v3/app/globals.css
+  73c25990a67c8e65 1-79
+v2/.gitignore
+  73c25990a67c8e65 1-67
+scripts/git-ai-stats-release.sh
+  6be3ab278b69002a 1-9
+v5/server.js
+  73c25990a67c8e65 1-137
+v6/public/sw.js
+  73c25990a67c8e65 1-68
+v5/public/index.html
+  73c25990a67c8e65 1-105
+git-ai-xeo-links.md
+  73c25990a67c8e65 1-25
+v3/app/api/ice-news/route.ts
+  73c25990a67c8e65 1-170
+app/lib/seo.ts
+  73c25990a67c8e65 1,63
+v5/README.md
+  73c25990a67c8e65 1-49
+v4/.gitignore
+  73c25990a67c8e65 1-67
+.gitignore
+  73c25990a67c8e65 5-8,10,15-16,21-23,26,30-36,38,43,45-48,54,57,60-65
+  b6ade8b61d8c123e 44
+v5/.gitignore
+  73c25990a67c8e65 1-54
+v3/CHANGELOG.md
+  73c25990a67c8e65 1-35
+v3/app/robots.ts
+  73c25990a67c8e65 1-9
+v6/public/js/map.js
+  73c25990a67c8e65 1-132
+v4/app/lib/analytics.ts
+  73c25990a67c8e65 1-43
+docs/plans/2026-02-12-ice-tracker-v7-design.md
+  b6ade8b61d8c123e 1-205
+v3/.gitignore
+  73c25990a67c8e65 1-67
+v3/app/lib/analytics.ts
+  73c25990a67c8e65 1-43
+docs/GIT_AI_RESEARCH.md
+  6be3ab278b69002a 7-25,91-112,150-152,160-209,215-247,267
+  73c25990a67c8e65 3,210-214
+v7/backend/src/modules/data-ingestion/index.js
+  b6ade8b61d8c123e 21-22,44-45,57-58,74-76,84-85,97-101,116-117
+v7/frontend/main.js
+  b6ade8b61d8c123e 1-40
+v3/app/lib/ai.ts
+  73c25990a67c8e65 1-110
+v7/backend/src/config/index.js
+  b6ade8b61d8c123e 1-11
+v6/.gitignore
+  73c25990a67c8e65 1-54
+v4/app/components/GoogleAnalytics.tsx
+  73c25990a67c8e65 1-17
+v4/package.json
+  73c25990a67c8e65 1-27
+v3/app/layout.tsx
+  73c25990a67c8e65 1-117
+v5/public/data/ero-offices.json
+  73c25990a67c8e65 1
+v4/tsconfig.json
+  73c25990a67c8e65 1
+docs/GIT_AI_LOCATIONS_BY_DEPTH.md
+  6be3ab278b69002a 1-228
+  73c25990a67c8e65 229
+app/components/StructuredNewsLd.tsx
+  73c25990a67c8e65 4
+v4/app/globals.css
+  73c25990a67c8e65 1-79
+v6/package.json
+  73c25990a67c8e65 1-19
+v4/app/components/ResourcesHotlines.tsx
+  73c25990a67c8e65 1-135
+v7/frontend/index.html
+  b6ade8b61d8c123e 1-17
+v3/app/components/GoogleAnalytics.tsx
+  73c25990a67c8e65 1-17
+v3/app/lib/seo.ts
+  73c25990a67c8e65 1-77
+v3/data/state-coords.json
+  73c25990a67c8e65 1
+v4/app/types/index.ts
+  73c25990a67c8e65 1-36
+docs/REVIEW.md
+  73c25990a67c8e65 1-106
+v2/app/lib/seo.ts
+  73c25990a67c8e65 1-90
+v3/app/lib/rate-limit.ts
+  73c25990a67c8e65 1-62
+v6/public/js/app.js
+  73c25990a67c8e65 1-595
+v4/app/lib/seo.ts
+  73c25990a67c8e65 1-77
+v5/public/data/hotlines.json
+  73c25990a67c8e65 1
+v4/app/components/KnowYourRights.tsx
+  73c25990a67c8e65 1-50
+v4/public/manifest.json
+  73c25990a67c8e65 1
+v3/app/components/MapView.tsx
+  73c25990a67c8e65 1-169
+v4/next.config.js
+  73c25990a67c8e65 1-24
+v4/.env.example
+  73c25990a67c8e65 1-10
+v4/app/page.tsx
+  73c25990a67c8e65 1-449
+v4/data/hotlines.json
+  73c25990a67c8e65 1
+v5/package.json
+  73c25990a67c8e65 1-16
+v4/app/sitemap.ts
+  73c25990a67c8e65 1-13
+v3/app/components/WebVitals.tsx
+  73c25990a67c8e65 1-14
+v4/data/ero-offices.json
+  73c25990a67c8e65 1
+v4/data/state-coords.json
+  73c25990a67c8e65 1
+v6/public/manifest.json
+  73c25990a67c8e65 1-18
+v3/.env.example
+  73c25990a67c8e65 1-22
+v4/README.md
+  73c25990a67c8e65 1-46
+v3/app/page.tsx
+  73c25990a67c8e65 1-466
+GEMINI.md
+  b6ade8b61d8c123e 1-62
+v4/app/lib/constants.ts
+  73c25990a67c8e65 1-21
+v4/app/robots.ts
+  73c25990a67c8e65 1-9
+v4/data/know-your-rights.ts
+  73c25990a67c8e65 1-58
+v4/app/layout.tsx
+  73c25990a67c8e65 1-117
+v7/backend/babel.config.mjs
+  b6ade8b61d8c123e 1-6
+v3/data/ero-offices.json
+  73c25990a67c8e65 1
+v6/server.js
+  73c25990a67c8e65 1-157
+v3/app/api/ai/summarize/route.ts
+  73c25990a67c8e65 1-63
+v4/app/components/MapView.tsx
+  73c25990a67c8e65 1-169
+v4/app/components/WebVitals.tsx
+  73c25990a67c8e65 1-14
+v3/public/manifest.json
+  73c25990a67c8e65 1
+v4/app/lib/url-state.ts
+  73c25990a67c8e65 1-31
+v7/backend/src/server.js
+  b6ade8b61d8c123e 1-94
+docs/DEPLOY_AND_MONETIZE.md
+  73c25990a67c8e65 1-92
+README.md
+  73c25990a67c8e65 58,62,67,74-83
+  6be3ab278b69002a 64
+v2/app/components/StructuredNewsLd.tsx
+  73c25990a67c8e65 1-50
+v6/public/styles.css
+  73c25990a67c8e65 1-284
+v5/public/js/map.js
+  73c25990a67c8e65 1-125
+v7/backend/jest.config.mjs
+  b6ade8b61d8c123e 1-11
+v6/public/index.html
+  73c25990a67c8e65 1-117
+v6/public/data/ero-offices.json
+  73c25990a67c8e65 1
+v5/public/js/app.js
+  73c25990a67c8e65 1-449
+v3/app/components/StructuredNewsLd.tsx
+  73c25990a67c8e65 1-39
+docs/ENV_AND_PUBLIC_API.md
+  73c25990a67c8e65 1-70
+v6/public/data/state-coords.json
+  73c25990a67c8e65 1
+v6/README.md
+  73c25990a67c8e65 1-50
+docs/GIT_AI_RUN_ON_ICE_TRACKER.md
+  6be3ab278b69002a 1-4,9-71,73-105
+  73c25990a67c8e65 5-8,72,106-109
+xeo.md
+  73c25990a67c8e65 1-66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.2",
+  "base_commit_sha": "bceae5d9fd4ea71bb7726d071ac7ad9149353270",
+  "prompts": {
+    "6be3ab278b69002a": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "f9a3e920-75cb-47cf-b5a5-6d5f21a3c13c",
+        "model": "unknown"
+      },
+      "human_author": "GPTJunkie <info@gptjunkie.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 471,
+      "overriden_lines": 0
+    },
+    "73c25990a67c8e65": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "6d281f48-178a-4b3a-8757-8b9c14ba126e",
+        "model": "default"
+      },
+      "human_author": "GPTJunkie <info@gptjunkie.com>",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 6680,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/244715688bb58aa9793816f9d50dbd4ed52586179f32de36bf252ca8ce7faf06"
+    },
+    "b6ade8b61d8c123e": {
+      "agent_id": {
+        "tool": "gemini",
+        "id": "cc454ab0-2fb2-4dff-a124-51f019a499b4",
+        "model": "gemini-2.5-flash"
+      },
+      "human_author": "GPTJunkie <info@gptjunkie.com>",
+      "messages": [],
+      "total_additions": 295,
+      "total_deletions": 144,
+      "accepted_lines": 823,
+      "overriden_lines": 0,
+      "messages_url": "https://usegitai.com/cas/13f7831c45ac9b530c9563e88c0c9112a53acc8e04a1c11427a8289df12c3827"
+    }
+  }
+}
