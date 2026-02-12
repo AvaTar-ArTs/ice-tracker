@@ -1,0 +1,93 @@
+# ICE Activity Tracker
+
+Live-track **U.S. Immigration and Customs Enforcement (ICE)** activity: enforcement news, ERO field offices, and a map of recent reports.
+
+## What it does
+
+- **Live news feed** from ICE.gov RSS: Enforcement & Removal and Breaking News (refreshed every 5 minutes).
+- **Interactive US map**: blue markers = ERO field offices; red markers = recent enforcement news (placed by state).
+- **Filters**: by state and by source (Enforcement & Removal vs Breaking News).
+- **Links** to official ICE news releases and field office info.
+
+## Data sources
+
+- [ICE News – Enforcement and Removal](https://www.ice.gov/rss/news/356)
+- [ICE Breaking News](https://www.ice.gov/rss/ice-breaking-news)
+- **State-specific RSS** for CA, TX, FL, NY, AZ, GA, NC, NJ, MA, MN (more granular updates)
+- ERO field office locations (from [ICE Field Offices](https://www.ice.gov/contact/field-offices))
+- **Community reports** — optional pins you add in the app (stored in your browser only)
+
+*Note: The feed is not real-time; it reflects ICE’s published press releases.*
+
+## Ways to get more live updates
+
+1. **Faster refresh** — In the app, set the dropdown to **1 min** so the RSS is polled every minute.
+2. **@ICEgov** (X/Twitter) — Official ICE announcements; often mirrors press releases.
+3. **Local immigrant rights orgs** — RAICES, ACLU, and local rapid-response networks often post alerts and hotline numbers.
+4. **News alerts** — Set up Google News or a news app alert for “ICE” + your city or state.
+5. **Community reports** — Use **+ Report** in the app to log what you see; data stays in your browser. For shared community reports you’d need a backend (e.g. Supabase) and moderation.
+
+## Run locally
+
+```bash
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+## Build
+
+```bash
+npm run build
+npm start
+```
+
+## SEO, GEO, XEO/DEO & trending optimizations
+
+The app is optimized for **top 1–5%** visibility and **trending/rising (+200%)** search intent:
+
+### SEO & GEO
+- **Metadata**: Title template, description, long-tail keywords, canonical URL, Open Graph, Twitter Card.
+- **GEO**: `geo.region` (US), `geo.placename`, ICBM meta tags; JSON-LD `Place` with US coverage.
+- **Keywords**: Primary + trending phrases (e.g. *ICE news today*, *ICE raids today*, *ERO arrests*, *ICE by state*, *ICE California/Texas/Florida*, *ICE activity map*, *ICE raids near me*) in `app/lib/seo.ts`.
+- **Sitemap**: `/sitemap.xml` with `changeFrequency: daily` for freshness.
+- **Robots**: `/robots.txt` allows indexing; `/api/` disallowed.
+- **Manifest**: `/manifest.json` for install and theme.
+
+### Trending / freshness (rising search)
+- **ItemList + NewsArticle JSON-LD**: Server component fetches latest ICE news and outputs Schema.org `ItemList` of `NewsArticle` so crawlers see fresh, topical content.
+- **Visible “Latest ICE activity”** heading and `role="feed"` for semantic clarity.
+- **FAQ**: `FAQPage` schema + visible FAQ section (same Q&As) for question-based search.
+
+### XEO/DEO (experience & performance)
+- **Preconnect** to CARTO tile servers and **dns-prefetch** for ice.gov to improve LCP/load.
+- **Map placeholder** with `min-h-[400px]` to reduce CLS.
+- **Config**: All strings and keywords in `app/lib/seo.ts`. Set `NEXT_PUBLIC_SITE_URL` in production.
+
+## Google Analytics, Ahrefs & Search Console
+
+### Google Analytics 4 (GA4)
+- Set **`NEXT_PUBLIC_GA_ID`** to your GA4 Measurement ID (e.g. `G-XXXXXXXXXX`) to enable.
+- **Page views** and **Enhanced measurement** (scrolls, outbound clicks) work via the default gtag config.
+- **Custom events** sent to GA4: `filter_state`, `filter_source`, `community_report_submit`, `news_click`, `refresh_click`, `faq_toggle`, `live_tips_toggle`, `report_form_open`. Use these in GA4 **Reports → Engagement → Events** and for **conversions** if you mark them as key events.
+- **Web Vitals** (LCP, FID, CLS, INP, etc.) are sent as events when GA is enabled; use them in **Reports → Engagement → Events** (filter by event name: `LCP`, `CLS`, etc.) or in **Explore** for custom analyses.
+- Copy `.env.example` to `.env.local` and add your IDs.
+
+### Google Search Console (GSC)
+1. Add your property at [search.google.com/search-console](https://search.google.com/search-console) (URL prefix or domain).
+2. Verify via HTML tag (add the meta tag to `app/layout.tsx` under `metadata.other` if needed) or DNS.
+3. Submit **sitemap**: `https://your-domain.com/sitemap.xml`.
+4. Use **Performance** to see queries, clicks, impressions, and average position. Use this to refine keywords in `app/lib/seo.ts` and to find new “also rank for” ideas.
+
+### Ahrefs (keywords & competitors)
+- **Keywords Explorer**: Use seed keywords from `app/lib/seo.ts` (e.g. *ICE tracker*, *ICE news today*, *ERO arrests*) to get **Matching terms**, **Related terms**, **Keyword Difficulty (KD)**, and **Traffic Potential**. Prioritize low-KD, informational-intent keywords and add strong variants to `SEO_KEYWORDS`.
+- **Site Explorer**: Enter your live URL to see **organic keywords** and **traffic**. Use **Content Gap** with competitor sites (e.g. other immigration- or government-tracking tools) to find keywords they rank for that you don’t.
+- **Ahrefs Webmaster Tools (AWT)**: Connect your site (free) for GSC-like data plus **KD** and **search volume** on the queries you rank for. Use it to decide which rankings to improve and which new keywords to target.
+- **Search intent**: In Keywords Explorer, filter by **Informational** (or **Navigational**) so on-page content and FAQs stay aligned with intent. The in-app FAQ and “Latest ICE activity” section target question and news intent.
+
+## Stack
+
+- **Next.js 14** (App Router), **React 18**, **TypeScript**
+- **Leaflet** + **react-leaflet** for the map (Carto Dark basemap)
+- **rss-parser** for ICE RSS feeds (server-side API route)
