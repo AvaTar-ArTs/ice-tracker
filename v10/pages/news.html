@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>News Feed — ICE Activity Tracker v10</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <nav class="top-nav" id="top-nav"></nav>
+  <div class="breadcrumb" id="breadcrumb"></div>
+
+  <div class="page-content">
+    <h1 class="page-title">News Feed</h1>
+    <p class="page-subtitle">ICE enforcement, breaking, and state-level news from official RSS feeds.</p>
+
+    <div class="filters">
+      <select id="filter-state">
+        <option value="">All states</option>
+      </select>
+      <select id="filter-source">
+        <option value="">All sources</option>
+        <option value="enforcement">Enforcement & Removal</option>
+        <option value="breaking">Breaking News</option>
+        <option value="state">State Feeds</option>
+      </select>
+      <button id="btn-refresh" class="btn-primary">Refresh</button>
+      <span id="count-label" style="align-self:center;font-size:.75rem;color:var(--text-muted)"></span>
+    </div>
+
+    <div id="news-list"><div class="spinner"></div></div>
+  </div>
+
+  <footer class="site-footer">Data from ICE.gov RSS feeds via rss2json.com proxy.</footer>
+
+  <script type="module">
+    import { renderNav } from "../js/nav.js";
+    import { fetchAllNews, formatDate, ALL_ABBREVS } from "../js/news.js";
+
+    renderNav("news", ["Dashboard", "News"]);
+
+    const stateSelect = document.getElementById("filter-state");
+    ALL_ABBREVS.sort().forEach(s => {
+      const opt = document.createElement("option");
+      opt.value = s; opt.textContent = s;
+      stateSelect.appendChild(opt);
+    });
+
+    let allNews = [];
+
+    function render() {
+      const stateFilter = stateSelect.value;
+      const sourceFilter = document.getElementById("filter-source").value;
+
+      let items = allNews;
+      if (stateFilter) items = items.filter(n => n.state === stateFilter);
+      if (sourceFilter) items = items.filter(n => n.source === sourceFilter);
+
+      document.getElementById("count-label").textContent = `${items.length} item${items.length !== 1 ? "s" : ""}`;
+
+      const container = document.getElementById("news-list");
+      if (items.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-muted);padding:2rem;text-align:center">No items match your filters.</p>';
+        return;
+      }
+
+      container.innerHTML = items.slice(0, 100).map(n => `
+        <div class="news-item" onclick="window.open('${n.link}','_blank')">
+          <div class="title">${n.title}</div>
+          <div class="meta">
+            ${n.state ? `<span class="tag tag-blue">${n.state}</span>` : ""}
+            <span class="tag tag-${n.source === 'enforcement' ? 'red' : n.source === 'breaking' ? 'orange' : 'green'}">${n.source}</span>
+            <span>${formatDate(n.pubDate)}</span>
+          </div>
+          ${n.description ? `<div class="desc">${n.description.slice(0, 200)}${n.description.length > 200 ? '...' : ''}</div>` : ""}
+        </div>
+      `).join("");
+    }
+
+    async function load() {
+      document.getElementById("news-list").innerHTML = '<div class="spinner"></div>';
+      try {
+        allNews = await fetchAllNews();
+        render();
+      } catch (e) {
+        document.getElementById("news-list").innerHTML = `<p style="color:var(--accent-red)">${e.message}</p>`;
+      }
+    }
+
+    stateSelect.addEventListener("change", render);
+    document.getElementById("filter-source").addEventListener("change", render);
+    document.getElementById("btn-refresh").addEventListener("click", () => {
+      allNews = [];
+      load();
+    });
+
+    load();
+  </script>
+</body>
+</html>

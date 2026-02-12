@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Map — ICE Activity Tracker v10</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    .map-wrap { height: calc(100vh - 200px); min-height: 400px; }
+    .legend { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: .375rem; padding: .5rem .75rem; font-size: .75rem; }
+    .legend-item { display: flex; align-items: center; gap: .4rem; margin-bottom: .25rem; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+  <nav class="top-nav" id="top-nav"></nav>
+  <div class="breadcrumb" id="breadcrumb"></div>
+
+  <div class="page-content">
+    <h1 class="page-title">Interactive Map</h1>
+    <div class="filters">
+      <select id="filter-state"><option value="">All states</option></select>
+      <span id="map-info" style="font-size:.75rem;color:var(--text-muted);align-self:center;"></span>
+    </div>
+    <div class="map-wrap" id="map"></div>
+  </div>
+
+  <footer class="site-footer">Blue = ERO Offices &middot; Red = News &middot; Orange = Community Reports</footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script type="module">
+    import { renderNav } from "../js/nav.js";
+    import { fetchAllNews, ALL_ABBREVS } from "../js/news.js";
+    import { ERO_OFFICES, STATE_COORDS } from "../js/map-data.js";
+    import { getReports } from "../js/reports.js";
+
+    renderNav("map", ["Dashboard", "Map"]);
+
+    // State filter dropdown
+    const stateSelect = document.getElementById("filter-state");
+    ALL_ABBREVS.sort().forEach(s => {
+      const opt = document.createElement("option");
+      opt.value = s; opt.textContent = s;
+      stateSelect.appendChild(opt);
+    });
+
+    // Init map
+    const map = L.map("map", { zoomControl: false }).setView([39.5, -98.35], 4);
+    L.control.zoom({ position: "topright" }).addTo(map);
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+      attribution: "&copy; CARTO",
+    }).addTo(map);
+
+    // Legend
+    const legend = L.control({ position: "bottomright" });
+    legend.onAdd = () => {
+      const div = L.DomUtil.create("div", "legend");
+      div.innerHTML = `
+        <div class="legend-item"><span class="legend-dot" style="background:#3b82f6"></span> ERO Office</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span> News</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#f59e0b"></span> Community Report</div>
+      `;
+      return div;
+    };
+    legend.addTo(map);
+
+    // Layers
+    const eroLayer = L.layerGroup().addTo(map);
+    const newsLayer = L.layerGroup().addTo(map);
+    const reportLayer = L.layerGroup().addTo(map);
+
+    // ERO offices
+    ERO_OFFICES.forEach(o => {
+      L.circleMarker([o.lat, o.lng], {
+        radius: 6, fillColor: "#3b82f6", color: "#1e3a5f", weight: 2, fillOpacity: 0.9,
+      }).bindPopup(`<b>${o.name}</b><br>${o.city}, ${o.state}<br><small>${o.area}</small>`)
+        .addTo(eroLayer);
+    });
+
+    async function loadMarkers() {
+      newsLayer.clearLayers();
+      reportLayer.clearLayers();
+
+      const filterState = stateSelect.value;
+
+      // News
+      try {
+        let news = await fetchAllNews();
+        if (filterState) news = news.filter(n => n.state === filterState);
+
+        news.forEach(n => {
+          if (!n.state || !STATE_COORDS[n.state]) return;
+          const [lat, lng] = STATE_COORDS[n.state];
+          L.circleMarker([lat + (Math.random() - .5) * .5, lng + (Math.random() - .5) * .5], {
+            radius: 5, fillColor: "#ef4444", color: "#7f1d1d", weight: 1, fillOpacity: 0.8,
+          }).bindPopup(`<a href="${n.link}" target="_blank" rel="noopener">${n.title}</a><br><small>${n.state} &middot; ${n.source}</small>`)
+            .addTo(newsLayer);
+        });
+
+        document.getElementById("map-info").textContent = `${news.length} news items plotted`;
+      } catch { /* ignore */ }
+
+      // Community reports
+      let reports = getReports();
+      if (filterState) reports = reports.filter(r => r.state === filterState);
+      reports.forEach(r => {
+        if (!STATE_COORDS[r.state]) return;
+        const [lat, lng] = STATE_COORDS[r.state];
+        L.circleMarker([lat + (Math.random() - .5) * .3, lng + (Math.random() - .5) * .3], {
+          radius: 6, fillColor: "#f59e0b", color: "#b45309", weight: 1, fillOpacity: 0.9,
+        }).bindPopup(`<b>Community Report</b><br>${r.city ? r.city + ", " : ""}${r.state}<br><small>${r.description || "No description"}</small>`)
+          .addTo(reportLayer);
+      });
+
+      if (filterState && STATE_COORDS[filterState]) {
+        const [lat, lng] = STATE_COORDS[filterState];
+        map.setView([lat, lng], 6);
+      }
+    }
+
+    stateSelect.addEventListener("change", loadMarkers);
+    loadMarkers();
+  </script>
+</body>
+</html>

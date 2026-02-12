@@ -1,0 +1,43 @@
+/* ERO office locations and state coordinate centroids */
+
+export const ERO_OFFICES = [
+  { id:"atl",name:"Atlanta",city:"Atlanta",state:"GA",lat:33.749,lng:-84.388,area:"Georgia, North Carolina, South Carolina" },
+  { id:"bal",name:"Baltimore",city:"Baltimore",state:"MD",lat:39.29,lng:-76.612,area:"Maryland" },
+  { id:"bos",name:"Boston",city:"Boston",state:"MA",lat:42.36,lng:-71.059,area:"Connecticut, Maine, Massachusetts, New Hampshire, Rhode Island, Vermont" },
+  { id:"buf",name:"Buffalo",city:"Buffalo",state:"NY",lat:42.886,lng:-78.879,area:"Upstate New York" },
+  { id:"chi",name:"Chicago",city:"Chicago",state:"IL",lat:41.878,lng:-87.63,area:"Illinois, Indiana, Wisconsin, Missouri, Kentucky, Kansas" },
+  { id:"dal",name:"Dallas",city:"Dallas",state:"TX",lat:32.777,lng:-96.797,area:"North Texas, Oklahoma" },
+  { id:"den",name:"Denver",city:"Denver",state:"CO",lat:39.739,lng:-104.99,area:"Colorado, Wyoming" },
+  { id:"det",name:"Detroit",city:"Detroit",state:"MI",lat:42.331,lng:-83.046,area:"Michigan, Ohio" },
+  { id:"elp",name:"El Paso",city:"El Paso",state:"TX",lat:31.761,lng:-106.485,area:"West Texas, New Mexico" },
+  { id:"hou",name:"Houston",city:"Houston",state:"TX",lat:29.76,lng:-95.37,area:"Southeast Texas" },
+  { id:"los",name:"Los Angeles",city:"Los Angeles",state:"CA",lat:34.052,lng:-118.244,area:"Central & Southern California" },
+  { id:"mia",name:"Miami",city:"Miami",state:"FL",lat:25.762,lng:-80.192,area:"Southern Florida, Puerto Rico, US Virgin Islands" },
+  { id:"new",name:"Newark",city:"Newark",state:"NJ",lat:40.736,lng:-74.172,area:"New Jersey" },
+  { id:"nol",name:"New Orleans",city:"New Orleans",state:"LA",lat:29.951,lng:-90.072,area:"Louisiana, Mississippi, Alabama, Arkansas, Tennessee" },
+  { id:"nyc",name:"New York City",city:"New York",state:"NY",lat:40.713,lng:-74.006,area:"New York City metro" },
+  { id:"phi",name:"Philadelphia",city:"Philadelphia",state:"PA",lat:39.952,lng:-75.164,area:"Pennsylvania, Delaware, West Virginia" },
+  { id:"phx",name:"Phoenix",city:"Phoenix",state:"AZ",lat:33.449,lng:-112.074,area:"Arizona" },
+  { id:"sac",name:"Sacramento",city:"Sacramento",state:"CA",lat:38.581,lng:-121.494,area:"Northern California, Hawaii" },
+  { id:"sal",name:"Salt Lake City",city:"Salt Lake City",state:"UT",lat:40.761,lng:-111.891,area:"Utah, Idaho, Montana, Nevada" },
+  { id:"san",name:"San Antonio",city:"San Antonio",state:"TX",lat:29.425,lng:-98.494,area:"Central & South Texas" },
+  { id:"sfo",name:"San Francisco",city:"San Francisco",state:"CA",lat:37.775,lng:-122.418,area:"Northern California" },
+  { id:"sea",name:"Seattle",city:"Seattle",state:"WA",lat:47.606,lng:-122.332,area:"Washington, Oregon, Alaska" },
+  { id:"spl",name:"St. Paul",city:"St. Paul",state:"MN",lat:44.954,lng:-93.09,area:"Minnesota, North Dakota, South Dakota, Iowa, Nebraska" },
+  { id:"tam",name:"Tampa",city:"Tampa",state:"FL",lat:27.951,lng:-82.458,area:"Central & Northern Florida" },
+  { id:"was",name:"Washington D.C.",city:"Washington",state:"DC",lat:38.907,lng:-77.037,area:"Washington D.C., Virginia" },
+];
+
+export const STATE_COORDS = {
+  AL:[32.8,-86.8],AK:[64.2,-152.5],AZ:[34.3,-111.7],AR:[34.8,-92.2],CA:[37.2,-119.5],
+  CO:[39,-105.5],CT:[41.6,-72.7],DE:[39,-75.5],DC:[38.9,-77],FL:[28.6,-82.4],
+  GA:[32.7,-83.5],HI:[20.8,-156.3],ID:[44.4,-114.6],IL:[40,-89.2],IN:[39.8,-86.3],
+  IA:[42,-93.5],KS:[38.5,-98.3],KY:[37.8,-85.7],LA:[31,-92],ME:[45.4,-69.2],
+  MD:[39.05,-76.7],MA:[42.2,-71.5],MI:[44.3,-85.6],MN:[46.3,-94.3],MS:[32.7,-89.7],
+  MO:[38.6,-92.6],MT:[47,-110],NE:[41.5,-99.7],NV:[39.9,-117],NH:[43.7,-71.6],
+  NJ:[40.1,-74.7],NM:[34.5,-106],NY:[42.9,-75.5],NC:[35.6,-79.8],ND:[47.5,-100.5],
+  OH:[40.4,-82.7],OK:[35.6,-97.5],OR:[44,-120.5],PA:[41,-77.5],RI:[41.7,-71.5],
+  SC:[34,-81],SD:[44.4,-100.2],TN:[35.9,-86.4],TX:[31.5,-99.3],UT:[39.3,-111.7],
+  VT:[44,-72.7],VA:[37.5,-79],WA:[47.4,-120.7],WV:[38.9,-80.2],WI:[44.6,-89.7],
+  WY:[43,-107.6],PR:[18.2,-66.5],
+};

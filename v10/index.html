@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ICE Activity Tracker v10 — Dashboard</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <nav class="top-nav" id="top-nav"></nav>
+
+  <div class="page-content">
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-subtitle">Real-time ICE enforcement news, interactive mapping, AI-powered analysis, and community reports.</p>
+
+    <div class="stat-row" id="stats">
+      <div class="stat-box"><div class="spinner"></div><div class="stat-label">Loading</div></div>
+    </div>
+
+    <h2 style="font-size:1.1rem;margin-bottom:.75rem;">Quick Access</h2>
+    <div class="card-grid">
+      <a href="pages/news.html" class="card" style="text-decoration:none;color:inherit;">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(59,130,246,.15);color:var(--accent-blue);">&#9881;</div>
+          <div class="card-title">News Feed</div>
+        </div>
+        <div class="card-desc">Browse enforcement, breaking, and state-level ICE news from official RSS feeds. Filter by state and source type.</div>
+        <span class="card-link">View news &rarr;</span>
+      </a>
+      <a href="pages/map.html" class="card" style="text-decoration:none;color:inherit;">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(16,185,129,.15);color:var(--accent-green);">&#9778;</div>
+          <div class="card-title">Interactive Map</div>
+        </div>
+        <div class="card-desc">View ERO field offices, enforcement news, and community reports plotted on a dark-themed US map.</div>
+        <span class="card-link">Open map &rarr;</span>
+      </a>
+      <a href="pages/analytics.html" class="card" style="text-decoration:none;color:inherit;">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(139,92,246,.15);color:var(--accent-purple);">&#9733;</div>
+          <div class="card-title">AI Insights</div>
+        </div>
+        <div class="card-desc">Get AI-powered analysis of current ICE activity trends, geographic patterns, and notable enforcement actions via Gemini.</div>
+        <span class="card-link">Analyze &rarr;</span>
+      </a>
+      <a href="pages/reports.html" class="card" style="text-decoration:none;color:inherit;">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(245,158,11,.15);color:var(--accent-orange);">&#9998;</div>
+          <div class="card-title">Community Reports</div>
+        </div>
+        <div class="card-desc">Submit and view community-contributed reports of ICE activity. All data stored locally in your browser.</div>
+        <span class="card-link">View reports &rarr;</span>
+      </a>
+      <a href="pages/rights.html" class="card" style="text-decoration:none;color:inherit;">
+        <div class="card-header">
+          <div class="card-icon" style="background:rgba(16,185,129,.15);color:var(--accent-green);">&#9878;</div>
+          <div class="card-title">Know Your Rights</div>
+        </div>
+        <div class="card-desc">Essential information about your constitutional rights during encounters with immigration enforcement.</div>
+        <span class="card-link">Learn more &rarr;</span>
+      </a>
+    </div>
+
+    <h2 style="font-size:1.1rem;margin:1.5rem 0 .75rem;">Latest Headlines</h2>
+    <div id="latest-news"><div class="spinner"></div></div>
+  </div>
+
+  <footer class="site-footer">
+    Data: ICE.gov news RSS feeds. Not real-time. &middot;
+    <a href="https://www.ice.gov/newsroom" target="_blank" rel="noopener noreferrer">ICE Newsroom</a> &middot;
+    <a href="https://www.ice.gov/contact/field-offices" target="_blank" rel="noopener noreferrer">ERO Field Offices</a>
+  </footer>
+
+  <script type="module">
+    import { renderNav } from "./js/nav.js";
+    import { fetchAllNews, formatDate } from "./js/news.js";
+    import { getReports } from "./js/reports.js";
+
+    renderNav("dashboard");
+
+    (async () => {
+      try {
+        const news = await fetchAllNews();
+        const reports = getReports();
+
+        // Stats
+        const states = new Set(news.filter(n => n.state).map(n => n.state));
+        document.getElementById("stats").innerHTML = `
+          <div class="stat-box"><div class="stat-value" style="color:var(--accent-blue)">${news.length}</div><div class="stat-label">News Items</div></div>
+          <div class="stat-box"><div class="stat-value" style="color:var(--accent-green)">${states.size}</div><div class="stat-label">States</div></div>
+          <div class="stat-box"><div class="stat-value" style="color:var(--accent-orange)">${reports.length}</div><div class="stat-label">Community Reports</div></div>
+          <div class="stat-box"><div class="stat-value" style="color:var(--accent-purple)">25</div><div class="stat-label">ERO Offices</div></div>
+        `;
+
+        // Latest headlines
+        const container = document.getElementById("latest-news");
+        if (news.length === 0) {
+          container.innerHTML = '<p style="color:var(--text-muted)">No news items loaded. RSS feeds may be unavailable.</p>';
+          return;
+        }
+        container.innerHTML = news.slice(0, 8).map(n => `
+          <div class="news-item" onclick="window.open('${n.link}','_blank')">
+            <div class="title">${n.title}</div>
+            <div class="meta">
+              ${n.state ? `<span class="tag tag-blue">${n.state}</span>` : ""}
+              <span class="tag tag-${n.source === 'enforcement' ? 'red' : n.source === 'breaking' ? 'orange' : 'green'}">${n.source}</span>
+              <span>${formatDate(n.pubDate)}</span>
+            </div>
+          </div>
+        `).join("");
+      } catch (e) {
+        document.getElementById("stats").innerHTML = '<div class="stat-box"><div class="stat-label">Failed to load data</div></div>';
+        document.getElementById("latest-news").innerHTML = `<p style="color:var(--accent-red)">${e.message}</p>`;
+      }
+    })();
+  </script>
+</body>
+</html>
