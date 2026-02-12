@@ -1,12 +1,17 @@
 /* Shared navigation renderer for all pages */
 
+/* Detect base path: works on any hosting root */
+const SCRIPT_URL = import.meta.url;
+const JS_DIR = SCRIPT_URL.substring(0, SCRIPT_URL.lastIndexOf("/"));   // …/js
+const BASE = JS_DIR.substring(0, JS_DIR.lastIndexOf("/") + 1);         // …/
+
 const NAV_ITEMS = [
-  { label: "Dashboard", href: "/v10/index.html", id: "dashboard" },
-  { label: "News", href: "/v10/pages/news.html", id: "news" },
-  { label: "Map", href: "/v10/pages/map.html", id: "map" },
-  { label: "AI Insights", href: "/v10/pages/analytics.html", id: "analytics" },
-  { label: "Reports", href: "/v10/pages/reports.html", id: "reports" },
-  { label: "Rights", href: "/v10/pages/rights.html", id: "rights" },
+  { label: "Dashboard", href: BASE + "index.html", id: "dashboard" },
+  { label: "News", href: BASE + "pages/news.html", id: "news" },
+  { label: "Map", href: BASE + "pages/map.html", id: "map" },
+  { label: "AI Insights", href: BASE + "pages/analytics.html", id: "analytics" },
+  { label: "Reports", href: BASE + "pages/reports.html", id: "reports" },
+  { label: "Rights", href: BASE + "pages/rights.html", id: "rights" },
 ];
 
 /**
@@ -24,7 +29,7 @@ export function renderNav(activeId, breadcrumb = []) {
   ).join("");
 
   nav.innerHTML = `
-    <a href="/v10/index.html" class="brand"><span>ICE</span> Activity Tracker <small style="font-size:.65rem;color:var(--text-muted);margin-left:.35rem">v10</small></a>
+    <a href="${BASE}index.html" class="brand"><span>ICE</span> Activity Tracker <small style="font-size:.65rem;color:var(--text-muted);margin-left:.35rem">v10</small></a>
     <div class="nav-links">${links}</div>
   `;
 
