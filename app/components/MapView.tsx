@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import dynamic from "next/dynamic";
 import type { IceNewsItem } from "@/app/api/ice-news/route";
 import { trackEvent, ANALYTICS_EVENTS } from "@/app/lib/analytics";
+import { formatDateMap } from "@/app/lib/format-date";
 
 const L = typeof window !== "undefined" ? require("leaflet") : null;
 
@@ -172,7 +173,7 @@ export default function MapView({
               </a>
               <div className="text-xs text-[#9ca3af] mt-1">
                 {[n.city, n.state].filter(Boolean).join(", ")} ·{" "}
-                {formatDate(n.pubDate)}
+                {formatDateMap(n.pubDate)}
               </div>
               <p className="text-xs text-[#9ca3af] mt-1 line-clamp-3">
                 {n.description}
@@ -213,7 +214,7 @@ export default function MapView({
                 </p>
               )}
               <div className="text-xs text-[#6b7280] mt-1">
-                {formatDate(r.createdAt)}
+                {formatDateMap(r.createdAt)}
               </div>
             </div>
           </Popup>
@@ -224,7 +225,8 @@ export default function MapView({
 }
 
 function ZoomButtons() {
-  const { useMap } = require("react-leaflet");
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { useMap } = require("react-leaflet") as typeof import("react-leaflet");
   const map = useMap();
   return (
     <div className="leaflet-top leaflet-right absolute top-4 right-4 z-[1000]">
@@ -246,21 +248,4 @@ function ZoomButtons() {
       </div>
     </div>
   );
-}
-
-function formatDate(s: string) {
-  try {
-    const d = new Date(s);
-    const now = new Date();
-    const diff = now.getTime() - d.getTime();
-    if (diff < 86400000) return "Today";
-    if (diff < 172800000) return "Yesterday";
-    return d.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: d.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
-    });
-  } catch {
-    return "";
-  }
 }
