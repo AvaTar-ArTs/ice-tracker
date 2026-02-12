@@ -1,0 +1,97 @@
+[User]
+how do i find Information Required for Automation
+
+    1. Hostinger FTP Credentials
+     - FTP Hostname/Server
+     - FTP Username
+     - FTP Password
+     - Port (usually 21 for FTP, 22 for SFTP)
+
+    2. Database Information
+     - Database Host (usually localhost or provided by Hostinger)
+     - Database Name
+     - Database Username
+     - Database Password
+     - Database Type (MySQL or PostgreSQL)
+
+    3. Domain Information
+     - Main domain: avatararts.org
+     - Subdomain to use: ice-tracker.avatararts.org (or another subdomain of
+       your choice)
+
+    4. Backend Server Information
+    Since the application requires Node.js, PostgreSQL, and background
+    processing, we'll need a separate server for the backend. Do you have:
+     - A VPS or cloud server (AWS, DigitalOcean, Google Cloud, etc.)?
+     - Or should I provide instructions for setting one up?
+
+    5. Environment Variables
+     - Mapbox token for maps (free at mapbox.com)
+     - Any other API keys you want to use
+(12/02/2026 05:22)
+
+[Kodee]
+Hi Steven — here’s where to pull each item in hPanel for **avatararts.org**.
+
+## 1) FTP credentials (Host, user, port, password)
+- Go to **Websites → avatararts.org → Dashboard → FTP Accounts**: [https://hpanel.hostinger.com/websites](https://hpanel.hostinger.com/websites)
+- There you’ll see:
+  - **FTP Hostname/Server**: use your **Hosting IP** (or the hostname shown there)
+  - **FTP Username**: shown in that page (unique per website)
+  - **Port**: **21** for FTP (use **22** only if you’re connecting via SFTP/SSH)
+- **FTP Password** is *not displayed* for security. On the same page click **Change FTP password** to set a new one (store it securely).
+- Your site’s web root (upload path) is: `/home/u365102102/domains/avatararts.org/public_html`
+
+## 2) Database information (host/name/user/password/type)
+- Go to **Websites → avatararts.org → Dashboard → Databases → MySQL Databases** (or **PostgreSQL** if you created one).
+- You’ll get:
+  - **Database host** (often `localhost` on shared hosting—use whatever hPanel shows)
+  - **Database name / username**
+  - **Password**: you can **change/reset** it there if you don’t know it
+  - **Database type**: on shared hosting it’s typically **MySQL**; **PostgreSQL** is only if you’ve created a PostgreSQL DB (usually on VPS)
+
+## 3) Domain + subdomain
+- Main domain: **avatararts.org**
+- To create the subdomain: **Websites → avatararts.org → Subdomains → Create** and add `ice-tracker` (this makes `ice-tracker.avatararts.org`).
+
+## 4) Backend server (Node.js + PostgreSQL + workers)
+On **Premium Web Hosting (shared hosting)**, you generally can’t run a persistent Node.js backend + background workers reliably—this is best on a **VPS**.  
+Tell me if you already have a VPS; if not, I can outline the quickest Hostinger VPS setup checklist (Node, PostgreSQL, reverse proxy, SSL).
+
+## 5) Environment variables
+- **Mapbox token**: from your Mapbox account dashboard (you paste it into your app’s `.env` / server config).
+- Other API keys: same idea—collect them from each provider, then add as env vars on your backend server (or in your deployment pipeline).
+
+If you tell me whether you want the backend to run on a **Hostinger VPS** and which DB you want (**PostgreSQL** vs **MySQL**), I’ll give you the exact “copy/paste” list of values your automation needs.
+(12/02/2026 05:23)
+
+[User]
+which of my many websites would be best to host this project
+(12/02/2026 06:22)
+
+[Kodee]
+All of your active sites (**gptjunkie.com, avatararts.org, aiworkflowalchemy.com, quantumforgelabs.org, automaitionapi.org**) are on the **same Premium Web Hosting plan** (shared hosting), so *performance/limits will be essentially the same* no matter which domain you pick.
+
+For this project specifically:
+- **Best choice for the public site/UI:** **avatararts.org** (it matches the project/brand and you can cleanly use `ice-tracker.avatararts.org` as the app subdomain).
+- **Best choice for the backend (Node.js + PostgreSQL + background workers):** **none of these shared-hosting websites**—you’ll want a **VPS** for the backend, then point a subdomain like `api.avatararts.org` (or `ice-tracker.avatararts.org`) to that VPS.
+
+If you tell me whether you want `ice-tracker.avatararts.org` to be **frontend**, **backend**, or **both**, I’ll recommend the exact subdomain split and DNS setup.
+(12/02/2026 06:23)
+
+[User]
+what is a vps backend and can i use it? meaning is it already enabled or do i need to purchase? if so no
+(12/02/2026 06:24)
+
+[Kodee]
+### What a “VPS backend” means
+A **VPS (Virtual Private Server)** is your own small server with dedicated resources and full control (you can run long‑running apps like a **Node.js API**, **PostgreSQL**, and **background workers/cron jobs** reliably). Shared hosting is mainly for PHP websites and isn’t ideal for always-on Node + workers.
+
+### Can you use it / is it already enabled?
+On your account right now, I only see **Premium Web Hosting (shared hosting)** and **no active VPS**, so it’s **not enabled**—you’d need to **purchase a VPS** to use one.
+
+### If you don’t want to purchase
+You can still host the project on your current hosting, but you’ll need to adjust the architecture (e.g., **WordPress/PHP-based** or a mostly **static frontend** that talks to third‑party services, and avoid a persistent Node+Postgres+workers stack).
+
+Tell me which parts you *must* have (Node API? PostgreSQL? background jobs?), and I’ll suggest the best “no-VPS” setup.
+(12/02/2026 06:24)

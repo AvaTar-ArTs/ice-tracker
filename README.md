@@ -97,3 +97,29 @@ We've implemented a complete agent system for Git AI management:
 - **Comprehensive Documentation**: Guides for implementation and best practices
 
 See `COMPREHENSIVE_SUMMARY.md` for complete details.
+
+## Qwen AI Integration
+
+This project includes specialized Qwen AI integration with tools for tracking AI-assisted development and providing project-specific assistance:
+
+### Qwen Components
+- **Qwen ICE Tracker Assistant Skill**: Provides project-specific guidance for development, Git AI integration, and best practices
+- **Qwen ICE Tracker Agent**: Advanced agent for comprehensive project analysis and assistance
+- **Git AI Integration**: Line-level attribution tracking for AI vs human contributions
+
+### Capabilities
+- Project architecture analysis and navigation
+- Git AI setup and configuration assistance
+- Development workflow guidance
+- Quality assurance and best practices
+- Troubleshooting and issue resolution
+
+### Usage
+The Qwen integration provides specialized assistance with:
+- Understanding project variants (v2-v7) and their features
+- Next.js 14, React 18, TypeScript, Leaflet, and rss-parser development
+- Mapping functionality and RSS feed integration
+- Git AI attribution tracking and workflows
+- Security and privacy considerations
+
+For more information, see the Qwen integration documentation in `skills/qwen-integration/`.
