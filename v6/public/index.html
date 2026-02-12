@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" class="frost">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="description" content="ICE Activity Tracker v6 — live news, ERO map, search, timeline, export, Know Your Rights, hotlines, in-browser AI. PWA." />
+  <title>ICE Activity Tracker v6 | Live enforcement & ERO news</title>
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div id="app" class="app">
+    <a href="#feed-list" class="skip-link">Skip to feed</a>
+    <header class="header">
+      <div class="header-left">
+        <h1 class="title">ICE Activity Tracker <span class="ver">v6</span></h1>
+        <span class="tagline">Live news · Map · Search · Timeline · Export · Know Your Rights · In-browser AI</span>
+      </div>
+      <div class="header-controls">
+        <select id="refresh-interval" aria-label="Auto-refresh">
+          <option value="60000">1 min</option>
+          <option value="300000" selected>5 min</option>
+          <option value="900000">15 min</option>
+        </select>
+        <span id="updated-label" class="updated-label"></span>
+        <button type="button" id="btn-new" class="btn-new" hidden>0 new</button>
+        <button type="button" id="btn-refresh" class="btn-refresh">Refresh</button>
+        <button type="button" id="btn-focus" class="btn-focus" title="Focus mode (minimal UI)">Focus</button>
+        <button type="button" id="btn-export" class="btn-export" title="Export visible as CSV">Export CSV</button>
+      </div>
+    </header>
+
+    <div class="main-row">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-inner">
+          <div id="fetch-error" class="fetch-error" hidden></div>
+          <div class="search-row">
+            <input type="search" id="search" placeholder="Search feed…" aria-label="Search feed" class="search-input" autocomplete="off" />
+          </div>
+          <div class="filters">
+            <select id="filter-state" aria-label="State">
+              <option value="">All states</option>
+            </select>
+            <select id="filter-source" aria-label="Source">
+              <option value="all">All sources</option>
+              <option value="enforcement">Enforcement & Removal</option>
+              <option value="breaking">Breaking news</option>
+              <option value="state">State feeds</option>
+            </select>
+            <button type="button" id="btn-view-mode" class="link-btn">Timeline</button>
+            <button type="button" id="btn-report" class="btn-report">+ Report</button>
+          </div>
+          <div class="links-row">
+            <button type="button" id="btn-kyr" class="link-btn">Know Your Rights</button>
+            <button type="button" id="btn-hotlines" class="link-btn">Hotlines</button>
+            <button type="button" id="btn-faq" class="link-btn">FAQ</button>
+            <button type="button" id="btn-live-tips" class="link-btn">Live updates</button>
+          </div>
+          <div id="panel-kyr" class="panel" hidden></div>
+          <div id="panel-hotlines" class="panel" hidden></div>
+          <div id="panel-faq" class="panel" hidden></div>
+          <div id="panel-live-tips" class="panel" hidden></div>
+          <form id="form-report" class="report-form" hidden>
+            <p class="form-note">Community report (this browser only). Unverified.</p>
+            <input type="text" id="report-state" placeholder="State (e.g. CA)" maxlength="2" aria-label="State" />
+            <input type="text" id="report-city" placeholder="City (optional)" aria-label="City" />
+            <textarea id="report-desc" placeholder="Description (optional)" rows="2" aria-label="Description"></textarea>
+            <div class="form-actions">
+              <button type="submit" class="btn-primary">Save</button>
+              <button type="button" id="btn-cancel-report" class="btn-secondary">Cancel</button>
+            </div>
+          </form>
+          <div class="meta-row">
+            <span id="feed-count" class="feed-count">0 items</span>
+            <button type="button" id="btn-clear-reports" class="link-btn warn" hidden>Clear reports</button>
+          </div>
+
+          <div class="ai-block">
+            <button type="button" id="btn-ai-summary" class="link-btn ai-btn">AI Summary</button>
+            <button type="button" id="btn-ai-points" class="link-btn ai-btn">AI Key points</button>
+            <p class="ai-hint">In-browser; first run may load a model.</p>
+            <p id="ai-error" class="ai-error" hidden></p>
+            <div id="ai-result" class="ai-result" hidden><span class="ai-badge">AI</span> <span id="ai-text"></span></div>
+          </div>
+
+          <div id="main-content" class="feed-container" role="feed" aria-label="ICE news" tabindex="-1">
+            <h2 class="feed-heading">Latest ICE activity</h2>
+            <div id="feed-loading" class="feed-loading">Loading…</div>
+            <div id="feed-timeline" class="feed-timeline" hidden></div>
+            <ul id="feed-list" class="feed-list" hidden></ul>
+            <div id="feed-empty" class="feed-empty" hidden>No items match filters or search.</div>
+          </div>
+        </div>
+      </aside>
+      <main class="map-wrap" aria-label="Map">
+        <div id="map" class="map"></div>
+      </main>
+    </div>
+
+    <div id="toast" class="toast" hidden aria-live="polite"></div>
+    <footer class="footer">
+      <span>Data: ICE.gov RSS. KYR & hotlines in-app. AI in-browser. Not legal advice. v6 PWA · SSE · Export · Search</span>
+      <a href="https://www.ice.gov/newsroom" target="_blank" rel="noopener noreferrer">ICE Newsroom</a>
+      <a href="https://www.ice.gov/contact/field-offices" target="_blank" rel="noopener noreferrer">ERO offices</a>
+    </footer>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <script src="/js/map.js"></script>
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>

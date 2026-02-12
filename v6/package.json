@@ -1,0 +1,19 @@
+{
+  "name": "ice-tracker-v6",
+  "version": "0.6.0",
+  "description": "ICE Activity Tracker v6 — enhanced PWA: search, timeline, clustering map, export, keyboard nav, in-browser AI, frost theme",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.0",
+    "rss-parser": "^3.13.0"
+  }
+}

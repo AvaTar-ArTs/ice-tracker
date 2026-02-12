@@ -1,0 +1,18 @@
+{
+  "name": "ICE Activity Tracker v6",
+  "short_name": "ICE Tracker v6",
+  "description": "Live ICE enforcement news, ERO map, search, timeline, export, Know Your Rights, hotlines, in-browser AI",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230f172a'/%3E%3Ctext x='32' y='40' font-size='28' fill='%2338bdf8' text-anchor='middle' font-family='system-ui,sans-serif'%3Ev6%3C/text%3E%3C/svg%3E",
+      "sizes": "64x64",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

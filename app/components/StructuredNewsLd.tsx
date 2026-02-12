@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import { SITE_URL } from "@/app/lib/seo";
 
-/** Server component: fetches latest ICE news and outputs ItemList + NewsArticle JSON-LD for trending/freshness SEO. */
+/** Fetches latest ICE news and outputs ItemList + NewsArticle JSON-LD. */
 export default async function StructuredNewsLd() {
   let items: { id: string; title: string; link: string; description: string; pubDate: string; state?: string }[] = [];
   try {

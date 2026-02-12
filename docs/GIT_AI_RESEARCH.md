@@ -1,6 +1,28 @@
 # Git AI – Research Summary (usegitai.com)
 
-**Sources:** [usegitai.com](https://usegitai.com/), [usegitai.com/docs](https://usegitai.com/docs), [How Git AI Works](https://usegitai.com/docs/cli/how-git-ai-works), [Cursor](https://usegitai.com/docs/cli/cursor), [AI Blame](https://usegitai.com/docs/cli/ai-blame).
+**Sources:** [usegitai.com](https://usegitai.com/), [usegitai.com/docs](https://usegitai.com/docs), [How Git AI Works](https://usegitai.com/docs/cli/how-git-ai-works), [Cursor](https://usegitai.com/docs/cli/cursor), [AI Blame](https://usegitai.com/docs/cli/ai-blame), [Prompt Analysis](https://usegitai.com/docs/cli/prompt-analysis).
+
+---
+
+## Review – Info at a glance
+
+| What | Where / How |
+|------|-------------|
+| **Product & docs** | [usegitai.com](https://usegitai.com), [usegitai.com/docs](https://usegitai.com/docs) |
+| **OSS & standard** | [github.com/git-ai-project/git-ai](https://github.com/git-ai-project/git-ai) |
+| **Install (this machine)** | `~/.git-ai/` — binary `bin/git-ai`, symlinks `bin/git` → git-ai, `bin/git-og` → system git |
+| **PATH** | `~/.git-ai/bin` added in `~/.zshrc`, `~/.bashrc`, `~/.config/fish/config.fish` |
+| **Cursor hooks** | `~/.cursor/hooks.json`: `beforeSubmitPrompt` + `afterFileEdit` → git-ai (or `~/.git-ai/hooks/cursor-checkpoint.sh` wrapper to fix "unknown" model) |
+| **Cursor extension** | `~/.cursor/extensions/git-ai.git-ai-vscode-0.1.17-universal` — gutter blame, hover prompts, toggle AI code view |
+| **OpenCode plugin** | `~/.config/opencode/plugin/git-ai.ts` — same checkpoint flow for OpenCode |
+| **This project (ice-tracker)** | README “Git AI” section; push/creds unchanged (`./scripts/push-avatararts.sh`, `~/.env.d`) |
+| **Verify** | `which git` → `~/.git-ai/bin/git`; after AI edits run `git-ai status`; use `git-ai blame <file>` for line attribution |
+
+**Commands:** `git-ai status` | `git-ai blame <file>` | `git-ai install-hooks` | `git-ai uninstall-hooks`  
+
+**Worktrees:** Supported; attribution is maintained across `git worktree` checkouts (see [History Rewriting](#history-rewriting) below).
+
+**Advanced:** Stats (ranges, `--json`, `--ignore`), `git-ai diff`, `show` / `show-prompt`, CI workflows, config (repos, prompt_storage), prompt analysis skill, personal dashboard, blame `--json` — see [Advanced uses](#advanced-uses-cli-config-ci-analysis) below.
 
 ---
 
@@ -66,6 +88,28 @@ Git AI uses Cursor’s **Hooks** (`~/.cursor/hooks.json`): `beforeSubmitPrompt` 
 
 **Check that it’s working:** After some AI edits, run `git-ai status` — you should see checkpoints (you vs AI %, recent edits with tool/model). If not, verify `which git` points to `~/.git-ai/bin/git` and that the Hooks output channel in Cursor shows no errors.
 
+**Note:** The **model** may appear as "unknown" when Cursor (or the hook input) doesn't send the model name; attribution (tool, e.g. "cursor") and line counts still work. You can fix this with a wrapper script: see [Fixing "unknown" model](#fixing-unknown-model) below.
+
+#### Fixing "unknown" model
+
+If Cursor sends empty or missing `model` in the hook payload, git-ai will show "unknown". Use a small wrapper that reads Cursor's JSON from stdin and sets a default model when missing/empty/unknown, then pipes to `git-ai checkpoint cursor --hook-input stdin`. Point Cursor's hooks at the wrapper instead of git-ai directly.
+
+**Example wrapper** — store under **`~/.git-ai/hooks/`** so all git-ai glue lives in one place (e.g. `~/.git-ai/hooks/cursor-checkpoint.sh`):
+
+```bash
+#!/usr/bin/env bash
+set -e
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+GIT_AI_BIN="${GIT_AI_BIN:-$SCRIPT_DIR/../bin/git-ai}"
+INPUT=$(cat)
+DEFAULT_MODEL="${GIT_AI_CURSOR_MODEL:-cursor}"
+echo "$INPUT" | jq -c --arg def "$DEFAULT_MODEL" \
+  'if .model == null or .model == "" or (.model | ascii_downcase) == "unknown" then .model = $def else . end' \
+  | "$GIT_AI_BIN" checkpoint cursor --hook-input stdin
+```
+
+In `~/.cursor/hooks.json`, point both `afterFileEdit` and `beforeSubmitPrompt` at this script (e.g. `"/Users/you/.git-ai/hooks/cursor-checkpoint.sh"`). Requires `jq`. Optional: set `GIT_AI_CURSOR_MODEL` (e.g. `claude-sonnet-4`) to label checkpoints with your default model.
+
 ---
 
 ## Main Commands / Features
@@ -103,11 +147,101 @@ After every **`git commit`**, Git AI prints a short summary (e.g. “you / ai”
 
 Git AI rewrites authorship logs when history is rewritten so attribution stays correct after:
 
-- merge, rebase, cherry-pick, amend, `reset --soft`/`--mixed`, stash/pop, worktrees, etc.
+- merge, rebase, cherry-pick, amend, `reset --soft`/`--mixed`, stash/pop, **worktrees**, etc.
+
+**Worktrees:** Git worktrees are explicitly supported — “git worktrees maintains correct attribution” ([how-git-ai-works](https://usegitai.com/docs/cli/how-git-ai-works)). Use `git worktree add` as usual; notes live in the shared repo, so attribution is consistent across worktrees. Run `git-ai status` and `git-ai blame` from any worktree; Cursor hooks in `~/.cursor/hooks.json` apply to whichever worktree you have open in Cursor.
 
 **Known limitation:** `git mv` does not move attribution to the new path yet. Some reformatting edge cases can shift line counts slightly.
 
 **Web UI squash/rebase:** GitHub/GitLab squash or rebase in the UI don’t run Git AI locally; they offer (or plan) **CI / webhook** solutions to reconstruct notes for the new commit.
+
+---
+
+## Advanced uses (CLI, config, CI, analysis)
+
+### Stats: commit ranges, JSON, and exclusions
+
+- **Ranges:** `git-ai stats main..HEAD` or `git-ai stats abc123..def456` — stats over a branch or release. For very small histories, range output may be minimal or empty; single-commit `git-ai stats` and `git-ai stats --json` are reliable.
+- **JSON:** `git-ai stats --json` (or with a range) for scripting. Fields include `human_additions`, `ai_additions`, `mixed_additions`, `ai_accepted`, `total_ai_additions`, `total_ai_deletions`, `time_waiting_for_ai`, and `tool_model_breakdown` (per tool/model, e.g. `cursor::unknown`).
+- **Ignore patterns:** `git-ai stats --ignore "*.lock" "**/dist/**"` — exclude lockfiles, build output, or generated code so metrics reflect "real" source.
+
+**Creative use:** Run `git-ai stats v1.0..HEAD --json --ignore "*.lock" "package-lock.json"` in CI or a release script to attach an "AI % this release" metric to release notes or compliance reports.
+
+### Diff with AI attribution
+
+- **Single commit:** `git-ai diff HEAD` or `git-ai diff <sha>` — unified diff with each changed line annotated (`🤖 cursor` / `👤 username` / `[no-data]`).
+- **Range:** `git-ai diff main..feature` — see who (human vs which AI) wrote each line in a whole PR's worth of changes.
+- **JSON:** `git-ai diff <commit> --json` for custom tooling.
+
+**Creative use:** In code review, run `git-ai diff main..branch` to quickly see which hunks are AI vs human before doing a deep read.
+
+### Show and show-prompt: authorship log and prompt lookup
+
+- **`git-ai show <commit>`** — raw authorship log for that commit. **`git-ai show start..end`** — logs for every commit in the range.
+- **`git-ai show-prompt <prompt_id>`** — fetch the prompt (and metadata) that produced a given blob. Use **`--commit <rev>`** to restrict to one commit, or **`--offset n`** to get the nth occurrence (0 = most recent). With **prompt_storage "default"**, the JSON may have empty **messages** (full prompt text lives in local SQLite); metadata (tool, model, accepted_lines, human_author) is still present.
+
+**Creative use:** When a bug lands in a line, run `git-ai blame file` to get the prompt ID, then `git-ai show-prompt <id>` to see the exact prompt that generated that code ("which prompt caused this bug?").
+
+### CI: squash/rebase merge reconstruction
+
+- **GitHub:** `git-ai ci github install` — creates `.github/workflows/git-ai.yaml` that runs on PR close; when a PR is squash- or rebase-merged, it reconstructs authorship and pushes notes.
+- **GitLab:** `git-ai ci gitlab install` — prints a snippet for `.gitlab-ci.yml`; use a token with `api` + `write_repository` in `GITLAB_TOKEN`.
+
+**Creative use:** Add the GitHub workflow so every squash-merged PR keeps AI attribution on main without any local steps.
+
+### Configuration (config.json and CLI)
+
+Config file: **`~/.git-ai/config.json`** (or `%USERPROFILE%\.git-ai\config.json` on Windows). Or use **`git-ai config`** / **`git-ai config set <key> <value>`** / **`git-ai config set --add <key> <value>`**.
+
+- **Scope by repo:** `allow_repositories` (only these remotes), `exclude_repositories` (never run). Patterns: globs (`https://github.com/org/*`), URLs, or path (e.g. `.` resolves to repo remotes).
+- **Prompt privacy:** `prompt_storage`: `"default"` (local SQLite), `"notes"` (prompts in git notes, sync with push/fetch), `"local"` (local only). `exclude_prompts_in_repositories`: e.g. `["*"]` (no prompts in notes anywhere) or `["https://github.com/private-org/*"]`.
+- **Updates:** `update_channel` (`latest` / `next`), `disable_version_checks`, `disable_auto_updates` — useful for MDM or locked-down orgs.
+- **Other:** `git_path` — path to the underlying git binary the wrapper invokes (e.g. `/usr/local/bin/git`). `feature_flags` — object for experimental options (e.g. `auth_keyring`, `inter_commit_move`, `rewrite_stash`); use `git-ai config` to inspect.
+
+**Creative use:** `allow_repositories` only for org repos; `exclude_prompts_in_repositories ["*"]` so prompts stay local; use `prompt_storage notes` only in OSS repos where you want "prompt as documentation."
+
+### Prompt storage: local DB and notes
+
+- **Default:** Prompts in **`~/.git-ai/internal/db`** (SQLite). Query with `sqlite3 ~/.git-ai/internal/db "SELECT * FROM prompts;"` — useful for local scripts or one-off analysis.
+- **Notes:** `git-ai config set prompt_storage notes` — prompts go into git notes and sync; hover in the extension and `show-prompt` work across clones. Avoid in repos with secrets (notes are hard to purge).
+
+### Prompt analysis (skill + dashboard)
+
+- **Skill:** Git AI ships a **prompt-analysis** skill in **`~/.git-ai/skills/`**. In **Claude Code**: `/plugin add ~/.git-ai/skills` then use **`/git-ai:prompt-analysis`** with natural-language questions. The skill loads prompts from local store, git notes, or cloud; creates a one-off SQLite scratchpad; grades/categorizes and can compare to team. Docs: [usegitai.com/docs/cli/prompt-analysis](https://usegitai.com/docs/cli/prompt-analysis).
+- **Example questions:** "Which model has the best acceptance rate?" "Grade my prompts by best practices." "Categorize by work type (bug fix, feature, refactor, docs)." "Why do some prompts have low acceptance?" "Compare my prompting to everyone on my team." "How has my prompting changed over the last 6 months?" Include "team" or "everyone" to analyze whole team.
+- **Time range:** Default is last 30 days; say "last 90 days" or "last 6 months" (limited by when you installed Git AI).
+
+**Related:** [xEo](https://github.com/GPTJunkie/xEo) — community-curated skills for AI agents (Claude Code and others). See [../git-ai-xeo-links.md](../git-ai-xeo-links.md) in this repo.
+
+**Creative use:** Run prompt-analysis monthly: "Grade my prompts from the last 30 days" and "Which team member ships the most AI code with highest acceptance? What are they doing differently?" to build a lightweight "prompt quality" review habit.
+
+### Personal stats and dashboard
+
+- **Login:** `git-ai login` — optional; stats are computed locally.
+- **Dashboard:** `git-ai dashboard` (or usegitai.com/me) — AI code %, parallel agents, hours/day models are "working," generated:committed ratio. No code or prompts uploaded if you opt in.
+
+**Creative use:** Track "generated : committed" over time as a proxy for prompt quality and agent effectiveness; use dashboard + prompt-analysis together to tune which models and prompt styles you use.
+
+### Blame for tooling: JSON and stdin
+
+- **`git-ai blame <file> --json`** — line → prompt ID, plus a `prompts` map (tool, model, messages, etc.). Lets you build custom IDE plugins, code-review UIs, or scripts.
+- **Stdin:** Pipe file contents to blame so uncommitted edits get **"Not Committed Yet"** (commit `0000000`) and correct line offsets: ideal for "blame the current buffer" in editors.
+
+### Squash-authorship (plumbing)
+
+- **`git-ai squash-authorship <branch> <new-sha> <old-sha>`** — reconstruct authorship for a commit created by a web UI squash (e.g. when CI isn't available). **`--dry-run`** to preview.
+
+### Creative combinations
+
+| Goal | Approach |
+|------|----------|
+| **Compliance / audit** | `git-ai stats 4b825dc..HEAD --json --ignore "*.lock"` per release; store JSON artifact. |
+| **"Who wrote this?" in CR** | `git-ai diff main..branch` before review; optional `git-ai blame <file>` on hot files. |
+| **Debug a bad AI edit** | `git-ai blame file` → prompt ID → `git-ai show-prompt <id>` to see the prompt. |
+| **Team prompt hygiene** | Prompt-analysis: "Compare my prompting to everyone on my team" + "Grade prompts from last 90 days." |
+| **OSS "prompt as docs"** | `prompt_storage notes` + `exclude_prompts_in_repositories` only for private repos; contributors get prompts in notes. |
+| **Enterprise rollout** | `allow_repositories`, `exclude_repositories`, `exclude_prompts_in_repositories` + MDM to push `config.json`; CI workflow for squash-merge. |
+| **Multi-worktree** | Each worktree shares notes; run `git-ai status` / `blame` in any worktree; Cursor hooks apply to the open one. |
 
 ---
 
@@ -130,3 +264,4 @@ rm -rf ~/.git-ai
 | **Where** | usegitai.com (product + docs), github.com/git-ai-project/git-ai (OSS + standard). |
 | **Install** | One-liner per OS; no per-repo setup. |
 | **Cursor** | Hooks in `~/.cursor/hooks.json`; Agent + Tab completion supported; use `git-ai status` to verify. |
+| **Advanced** | [CLI reference](https://usegitai.com/docs/cli/reference), [CI workflows](https://usegitai.com/docs/cli/ci-workflows), [configuration](https://usegitai.com/docs/cli/configuration), [prompt analysis](https://usegitai.com/docs/cli/prompt-analysis), [personal stats](https://usegitai.com/docs/cli/personal-stats). |
