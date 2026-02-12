@@ -81,3 +81,19 @@ Metadata, sitemap, robots, and structured data are set in the app (see `app/layo
 | **v4** | Next 14      | v3 feature set + in-browser AI (Transformers.js)       |
 | **v5** | Express + vanilla JS | Same features as v4; no React; AI via esm.sh       |
 | **v6** | Express + vanilla JS | Enhanced: frost theme, search, timeline, export CSV, SSE, PWA, map clustering, focus mode — see [v6/README.md](v6/README.md) |
+
+## Git AI Integration
+
+This project includes comprehensive Git AI integration with tools for tracking AI-assisted development.
+
+### Git AI Agent System
+
+We've implemented a complete agent system for Git AI management:
+
+- **Dashboard Script**: Simple management for individual repositories
+- **Superpower Agent**: Advanced automation for multi-repo management
+- **Global Skill**: Accessible Git AI assistance via Qwen
+- **Global Agent**: Command-line tools for common tasks
+- **Comprehensive Documentation**: Guides for implementation and best practices
+
+See `COMPREHENSIVE_SUMMARY.md` for complete details.
