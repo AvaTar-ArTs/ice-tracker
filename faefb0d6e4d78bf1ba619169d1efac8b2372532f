@@ -1,0 +1,65 @@
+README.md
+  6be3ab278b69002a 1-93
+app/components/GoogleAnalytics.tsx
+  6be3ab278b69002a 1-25
+data/state-coords.json
+  6be3ab278b69002a 1-54
+app/sitemap.ts
+  6be3ab278b69002a 1-13
+package-lock.json
+  6be3ab278b69002a 1-601
+next.config.js
+  6be3ab278b69002a 1-4
+package.json
+  6be3ab278b69002a 1-26
+docs/GIT_AI_RESEARCH.md
+  6be3ab278b69002a 1-132
+.gitignore
+  6be3ab278b69002a 1-41
+app/api/ice-news/route.ts
+  6be3ab278b69002a 1-143
+app/robots.ts
+  6be3ab278b69002a 1-13
+CHANGELOG.md
+  6be3ab278b69002a 1-118
+public/manifest.json
+  6be3ab278b69002a 1-12
+app/page.tsx
+  6be3ab278b69002a 1-370
+tsconfig.json
+  6be3ab278b69002a 1-20
+app/components/MapView.tsx
+  6be3ab278b69002a 1-266
+app/components/WebVitals.tsx
+  6be3ab278b69002a 1-21
+data/ero-offices.json
+  6be3ab278b69002a 1-26
+.env.example
+  6be3ab278b69002a 1-5
+app/components/StructuredNewsLd.tsx
+  6be3ab278b69002a 1-49
+app/globals.css
+  6be3ab278b69002a 1-56
+app/layout.tsx
+  6be3ab278b69002a 1-130
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.2",
+  "base_commit_sha": "faefb0d6e4d78bf1ba619169d1efac8b2372532f",
+  "prompts": {
+    "6be3ab278b69002a": {
+      "agent_id": {
+        "tool": "cursor",
+        "id": "f9a3e920-75cb-47cf-b5a5-6d5f21a3c13c",
+        "model": "unknown"
+      },
+      "human_author": "GPTJunkie <info@gptjunkie.com>",
+      "messages": [],
+      "total_additions": 2232,
+      "total_deletions": 9,
+      "accepted_lines": 2223,
+      "overriden_lines": 0
+    }
+  }
+}
