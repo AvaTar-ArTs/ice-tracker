@@ -15,7 +15,7 @@ interface ActivityMapProps {
   fullScreen?: boolean;
 }
 
-const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || ''; // Demo token
+const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || ''; // Mapbox token should be set in environment variables
 
 const ActivityMap: React.FC<ActivityMapProps> = ({ fullScreen = false }) => {
   const dispatch = useDispatch();
