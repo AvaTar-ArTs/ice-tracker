@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - README: Pushing section (push script, ~/.env.d).
 - CI: GitHub Action for build on push to master/main.
-- Git AI: project setup and usage note in docs.
+- Git AI: project usage note in README and [docs/GIT_AI_RESEARCH.md](docs/GIT_AI_RESEARCH.md).
 
 ---
 
