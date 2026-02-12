@@ -45,7 +45,7 @@ function extractLocation(text: string): { state?: string; city?: string } {
     )
   );
   const abbrevMatch = text.match(
-    /\b(AZ|CA|CO|CT|DC|FL|GA|IL|IN|LA|MA|MD|MN|NC|NJ|NM|NY|OH|OK|OR|PA|TX|UT|VA|WA|WV)\b/i
+    /\b(AL|AK|AZ|AR|CA|CO|CT|DE|DC|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY|PR)\b/
   );
   const state = stateMatch
     ? US_STATE_ABBREV[stateMatch[1]] ?? stateMatch[1]
@@ -54,7 +54,7 @@ function extractLocation(text: string): { state?: string; city?: string } {
     : undefined;
 
   const cityPatterns = [
-    /(?:in|at|from)\s+([A-Za-z\s]+?),?\s*(?:AZ|CA|CO|CT|DC|FL|GA|IL|IN|LA|MA|MD|MN|NC|NJ|NM|NY|OH|OK|OR|PA|TX|UT|VA|WA|WV)/,
+    /(?:in|at|from)\s+([A-Za-z\s]+?),?\s*(?:AL|AK|AZ|AR|CA|CO|CT|DE|DC|FL|GA|HI|ID|IL|IN|IA|KS|KY|LA|ME|MD|MA|MI|MN|MS|MO|MT|NE|NV|NH|NJ|NM|NY|NC|ND|OH|OK|OR|PA|RI|SC|SD|TN|TX|UT|VT|VA|WA|WV|WI|WY|PR)/,
     /(?:arrested|operation in|raids? in)\s+([A-Za-z\s]+?)(?:\s|,|\.|$)/,
     /([A-Za-z\s]+?),?\s*(?:California|Texas|Florida|New York|Arizona)/,
   ];
@@ -68,6 +68,10 @@ function extractLocation(text: string): { state?: string; city?: string } {
   return { state };
 }
 
+let cachedResponse: { items: IceNewsItem[]; updated: string } | null = null;
+let cacheTimestamp = 0;
+const CACHE_TTL_MS = 60 * 1000; // 1 minute
+
 export interface IceNewsItem {
   id: string;
   title: string;
@@ -80,6 +84,11 @@ export interface IceNewsItem {
 }
 
 export async function GET() {
+  const now = Date.now();
+  if (cachedResponse && now - cacheTimestamp < CACHE_TTL_MS) {
+    return NextResponse.json(cachedResponse);
+  }
+
   try {
     const stateFeedPromises = STATE_FEEDS.map(({ url }) => parser.parseURL(url));
     const [enforcementFeed, breakingFeed, ...stateFeeds] = await Promise.allSettled([
@@ -129,10 +138,12 @@ export async function GET() {
         new Date(b.pubDate).getTime() - new Date(a.pubDate).getTime()
     );
 
-    return NextResponse.json({
+    cachedResponse = {
       items: items.slice(0, 100),
       updated: new Date().toISOString(),
-    });
+    };
+    cacheTimestamp = now;
+    return NextResponse.json(cachedResponse);
   } catch (e) {
     console.error("ICE news fetch error:", e);
     return NextResponse.json(

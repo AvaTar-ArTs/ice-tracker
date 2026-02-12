@@ -2,10 +2,11 @@
 
 import Script from "next/script";
 
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+const GA_ID_RAW = process.env.NEXT_PUBLIC_GA_ID;
+const GA_ID = GA_ID_RAW && /^G-[A-Z0-9]+$/i.test(GA_ID_RAW) ? GA_ID_RAW : null;
 
 export function GoogleAnalytics() {
-  if (!GA_ID || typeof GA_ID !== "string") return null;
+  if (!GA_ID) return null;
   return (
     <>
       <Script

@@ -13,6 +13,7 @@ import {
 } from "@/app/lib/community-reports";
 import { SEO_FAQS } from "@/app/lib/seo";
 import { trackEvent, ANALYTICS_EVENTS } from "@/app/lib/analytics";
+import { formatDateFeed } from "@/app/lib/format-date";
 
 const MapView = dynamic(() => import("@/app/components/MapView"), {
   ssr: false,
@@ -55,10 +56,16 @@ export default function Home() {
   const stateCoords = stateCoordsJson as unknown as Record<string, [number, number]>;
 
   const newsIdsRef = useRef<Set<string>>(new Set());
+  const [fetchError, setFetchError] = useState(false);
   const fetchNews = useCallback(async () => {
     try {
       const res = await fetch("/api/ice-news");
+      if (!res.ok) {
+        setFetchError(true);
+        return;
+      }
       const data = await res.json();
+      setFetchError(false);
       if (data.items) {
         const prevIds = newsIdsRef.current;
         const added = data.items.filter((n: IceNewsItem) => !prevIds.has(n.id));
@@ -67,8 +74,8 @@ export default function Home() {
         setNews(data.items);
       }
       if (data.updated) setUpdated(data.updated);
-    } catch (_) {
-      setNews([]);
+    } catch {
+      setFetchError(true);
     } finally {
       setLoading(false);
     }
@@ -289,6 +296,9 @@ export default function Home() {
             <h2 id="feed-heading" className="text-xs font-medium text-[#9ca3af] px-1 mb-2">
               Latest ICE activity & enforcement news
             </h2>
+            {fetchError && (
+              <div className="text-center text-[#f59e0b] py-2 text-xs">Failed to fetch — showing last known data.</div>
+            )}
             {loading && news.length === 0 ? (
               <div className="text-center text-[#6b7280] py-8">Loading ICE news…</div>
             ) : filtered.length === 0 ? (
@@ -323,7 +333,7 @@ export default function Home() {
                       <div className="flex items-center gap-2 mt-1 text-xs text-[#9ca3af]">
                         {item.state && <span>{item.state}</span>}
                         {item.city && <span>{item.city}</span>}
-                        <span>{formatDate(item.pubDate)}</span>
+                        <span>{formatDateFeed(item.pubDate)}</span>
                         <span className="text-[#6b7280]">{item.source}</span>
                       </div>
                     </article>
@@ -354,17 +364,4 @@ export default function Home() {
       </footer>
     </div>
   );
-}
-
-function formatDate(s: string) {
-  try {
-    const d = new Date(s);
-    const now = new Date();
-    const diff = now.getTime() - d.getTime();
-    if (diff < 86400000) return d.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
-    if (diff < 172800000) return "Yesterday";
-    return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-  } catch {
-    return "";
-  }
 }
